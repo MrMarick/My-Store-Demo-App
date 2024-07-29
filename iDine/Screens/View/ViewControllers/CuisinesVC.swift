@@ -42,6 +42,31 @@ class CuisinesVC: UIViewController {
 //        HeaderView.backgroundColor = .systemYellow
 //        setGradientBackground(view: HeaderView)
     }
+    override func viewDidLayoutSubviews() {
+        DispatchQueue.main.async {
+            self.setGradientColor(view: self.HeaderView, colors: [UIColor(hex: "EF8B59"), UIColor(hex: "F2D355")])
+        }
+    }
+    
+    func setGradientColor(view: UIView, colors: [UIColor]) {
+        // Remove any existing gradient layers
+        if let sublayers = view.layer.sublayers {
+            for layer in sublayers where layer is CAGradientLayer {
+                layer.removeFromSuperlayer()
+            }
+        }
+
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = view.bounds
+        gradientLayer.colors = colors.map { $0.cgColor }
+        gradientLayer.startPoint = CGPoint(x: 0.0, y: 0.0)
+        gradientLayer.endPoint = CGPoint(x: 1.0, y: 1.0)
+
+        view.layer.insertSublayer(gradientLayer, at: 0)
+        
+        // Ensure the gradient layer resizes with the view
+        view.layer.layoutSublayers()
+    }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == "gotoCategory"){
             let vc = segue.destination as? CategoryVC
@@ -84,7 +109,7 @@ extension CuisinesVC: CategoryVCDelegate {
 
 extension CuisinesVC: FavoriteTableCellDelegate{
     func favItemAdded() {
-        favoriteBadge.text = String(AppPreferences.shared.favItem.count)
+        favoriteBadge.text = "!"
         if AppPreferences.shared.favItem.count == 0 {
             favBadgeView.isHidden = true
         }else {
@@ -98,7 +123,7 @@ extension CuisinesVC: FavoriteTableCellDelegate{
 extension CuisinesVC: TableCellDelegate {
     func showToastMessage(_ message: String) {
         self.showToast(message: message)
-        cartBadge.text = String(AppPreferences.shared.oderedItem.count)
+        cartBadge.text = "!"
         
         if AppPreferences.shared.oderedItem.count == 0{
             cartBadgeView.isHidden = true
