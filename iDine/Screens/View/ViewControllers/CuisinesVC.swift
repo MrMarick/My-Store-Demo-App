@@ -75,7 +75,14 @@ class CuisinesVC: UIViewController {
         }
     }
     
+    @IBAction func favBtnActn(_ sender: Any) {
+        self.performSegue(withIdentifier: "gotoFavorite", sender: self)
+
+    }
     
+    @IBAction func cartBtnActn(_ sender: Any) {
+        self.performSegue(withIdentifier: "gotoCart", sender: self)
+    }
     @IBAction func categoryBtnActn(_ sender: Any) {
         self.performSegue(withIdentifier: "gotoCategory", sender: self)
     }
